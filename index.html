@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>para mi niña hermosa 💛</title>
+
+<style>
+body {
+  margin: 0;
+  background: radial-gradient(circle, #0a0015, #000);
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1 {
+  margin: 30px auto 20px auto;
+  color: #FFD700;
+  text-shadow: 0 0 20px #FFD700;
+  text-align: center;
+}
+
+#main-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+#left-panel {
+  max-width: 400px;
+  text-align: center;
+}
+
+#contador {
+  margin-top: 12px;
+  color: #FFFACD;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+canvas#girasol-canvas {
+  width: 100%;
+  max-width: 400px;
+  height: 500px;
+}
+
+canvas#stars {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#carta-container {
+  max-width: 400px;
+  background: rgba(255 235 59 / 0.15);
+  border: 2px solid #FFD700;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 0 20px #FFD700;
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+#carta-container h2 {
+  color: #fff176;
+}
+
+/* 📷 Imagen carta */
+#carta-imagen {
+  display: flex;
+  justify-content: center;
+}
+
+#img-carta {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #FFD700;
+}
+
+#descargar-btn {
+  margin-top: 20px;
+  background: linear-gradient(90deg, #ffd700, #ffea00);
+  border: none;
+  color: #4a2c00;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 70%;
+}
+
+#descargar-btn:hover {
+  background: linear-gradient(90deg, #ffea00, #ffd700);
+}
+</style>
+</head>
+
+<body>
+
+<h1>para mi niña hermosa 💛</h1>
+
+<div id="main-content">
+
+  <div id="left-panel">
+    <canvas id="girasol-canvas" width="400" height="500"></canvas>
+    <div id="contador"></div>
+  </div>
+
+  <div id="carta-container">
+    <h2>Carta para ti 💛</h2>
+
+    <div id="carta-imagen">
+      <img src="carta.png" id="img-carta">
+    </div>
+
+    <button id="descargar-btn">Descargar Carta</button>
+  </div>
+
+</div>
+
+<canvas id="stars"></canvas>
+
+<!-- Librería necesaria -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+
+/* 💛 Contador */
+const fechaInicio = new Date("2024-11-28");
+function actualizarContador(){
+  const hoy = new Date();
+  const dias = Math.floor((hoy-fechaInicio)/(1000*60*60*24));
+  document.getElementById("contador").innerText =
+    "Llevamos " + dias + " días juntos 💛";
+}
+setInterval(actualizarContador,1000);
+actualizarContador();
+
+/* 🌟 Estrellas */
+const stars = document.getElementById("stars");
+const ctxS = stars.getContext("2d");
+stars.width = window.innerWidth;
+stars.height = window.innerHeight;
+
+let lista = [];
+for(let i=0;i<100;i++){
+  lista.push({x:Math.random()*stars.width,y:Math.random()*stars.height,r:Math.random()*2});
+}
+
+function dibujar(){
+  ctxS.clearRect(0,0,stars.width,stars.height);
+  lista.forEach(e=>{
+    ctxS.beginPath();
+    ctxS.arc(e.x,e.y,e.r,0,Math.PI*2);
+    ctxS.fillStyle="white";
+    ctxS.fill();
+  });
+  requestAnimationFrame(dibujar);
+}
+dibujar();
+
+/* 🌻 Girasol */
+const canvas = document.getElementById("girasol-canvas");
+const ctx = canvas.getContext("2d");
+const img = new Image();
+img.src = "girasol.png";
+
+let p = 0;
+function animar(){
+  requestAnimationFrame(animar);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  if(p<1) p+=0.01;
+
+  let w = img.width*p;
+  let h = img.height*p;
+
+  ctx.drawImage(img,(canvas.width-w)/2,canvas.height-h,w,h);
+}
+img.onload = animar;
+
+/* 📥 Descargar */
+document.getElementById("descargar-btn").addEventListener("click",()=>{
+  const carta = document.getElementById("carta-imagen");
+
+  html2canvas(carta,{scale:3}).then(canvas=>{
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL();
+    link.download = "Carta.png";
+    link.click();
+  });
+});
+
+</script>
+
+</body>
+</html>
